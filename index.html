@@ -1,40 +1,17 @@
 <html>
 <head>
     <link rel="stylesheet" href="css/pure-min-0.6.0.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script>
-        /*
-        var data = {
-            {
-                question = "?",
-                {
-                    "stuff",
-                    "more stuff"
-                }
-            }
+        if (!String.prototype.format) {
+            String.prototype.format = function() {
+                var args = arguments;
+                return this.replace(/{(\d+)}/g, function(match, number) {
+                    return typeof args[number] != 'undefined' ? args[number] : match ;
+                });
+            };
         }
-        */
-        /*
-            questions which have sub arrays of tasks (or more questions?)
-            use arrays and have a version number to update saves if needed
-            recursive go through everything, have skip buttons and a list of skipped items built up?
-             (and everything goes in one place)
-            each item -> complete (checkmark, green), later (grey, alarm), ignore (red X)
-             save data on each item?
-            questions -> yes / no / not sure ?
-             not sure will just move question to end of list to be asked again
-            ? everything has default state of not answered or something, only save answers ?
-        */
-        /*
-        var data = [
-            {
-                type: "check",
-                text: "stuff",
-                //sub: []
-            },
-            {}
-        ]
-        */
 
         var Data = [
             ["icon.png", "Do this."],
@@ -48,8 +25,37 @@
             ["icon.png", "Final thing!"]
         ];
 
-        //TODO Save is loaded
         var Save = {
+            version: 0,
+            current: [0],
+            skipped: [],
+            qskipped: []
+        };
+
+        //TODO load game first!
+
+        // get to where we're at
+        var currentArray = Save.current;
+        var currentReference = Data[currentArray[0]]; //special, there is no preceding 2
+        for (var i = 1; i < currentArray.length; i++) {
+            currentReference = currentReference[2][currentArray[i]];
+        }
+
+        // place current on screen
+        function display() {
+            var element = document.getElementById("current");
+            element.innerHTML = "<img src='{0}' style='float:left;padding-right:16px;'><p>{1}</p>".format(currentReference[0], currentReference[1]);
+        }
+
+        /*
+            each item -> complete (checkmark, green), later (grey, alarm), ignore (red X)
+             save data on each item?
+            questions -> yes / no / not sure ?
+             not sure will just move question to end of list to be asked again
+        */
+
+        //TODO Save is loaded
+        /*var Save = {
             version: 1,
             current: [0], //could be for example [0, 1] which would mean element 0's sub 1 (note that with the above structure, what this ACTUALLY would translate to is Data[0][3][1], the 3 is because we have to go to the sub-array's arrays)
             skipped: [
@@ -59,7 +65,7 @@
             qskipped: [
                 [8,4] // same format, these are questions that are skipped, so anything under them is ignored, as well as them
             ]
-        };
+        };*/
 
         //TODO now we need a function to process what to show
 
@@ -68,15 +74,7 @@
         // note, version updates should be an array of arrays with values (in save form) of what was added
         //  actually, needs to be an array of objects (object per version), {added:, removed:}
 
-        if (!String.prototype.format) {
-            String.prototype.format = function() {
-                var args = arguments;
-                return this.replace(/{(\d+)}/g, function(match, number) {
-                    return typeof args[number] != 'undefined' ? args[number] : match ;
-                });
-            };
-        }
-
+        /*
         function writeTaskInnerHTML(element, task) {
             element.innerHTML = "<td><img src='{0}'><p>{1}</p></td>".format(task[0], task[1]);
         }
@@ -89,23 +87,43 @@
             //either display as question (or not) based on if a [3] exists in current
             // if a skip is chosen, current is appended to Save.skipped, and it is placed in lower table
         }
+        */
+
+        window.onload = function() {
+            setTimeout(display, 1);
+
+            if (window.addEventListener) {
+                window.addEventListener("storage", handleStorage, false);
+            } else {
+                window.attachEvent("onstorage", handleStorage);
+            }
+        };
     </script>
 </head>
 <body>
     <table class="pure-table centered">
         <thead>
             <tr>
-                <td>current item</td>
+                <td><button class="pure-button button-complete" onclick="javascript:nextTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
+                <td id="current"></td>
+                <td><button class="pure-button button-later" onclick="javascript:skipTask();" title="Do this later."><span class="fa fa-clock-o"></span></button></td>
+                <td><button class="pure-button button-ignore" onclick="javascript:nextTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>
+                <!--
+                <td><button class='pure-button button-delete' onclick='javascript:removeSkill(\"{0}\", \"{1}\");' title='Delete this skill.'><span class='fa fa-ban'></span></td><td><div>{0}<div class='level'>Lv {2}</div></div><br /><progress value='{3}' max='{4}'></progress></td><td><button class='pure-button button-plus' onclick='javascript:skillUp(\"{0}\", \"{1}\");' title='+1 xp'><span class='fa fa-plus-circle'></span></button></td>
+                -->
+                <!--complete (checkmark, green), later (grey, alarm), ignore (red X)-->
             </tr>
         </thead>
         <tbody>
             <tr>
-                <th>skipped header</th>
+                <th colspan="4">Above: Current. Below: Skipped.</th>
             </tr>
         </tbody>
         <tfoot>
-            <tr>
-                <td>skipped items</td>
+            <tr id="skipped">
+                <td><button class="pure-button button-complete" onclick="javascript:nextTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
+                <td colspan="2">example</td>
+                <td><button class="pure-button button-ignore" onclick="javascript:nextTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>
             </tr>
         </tfoot>
     </table>

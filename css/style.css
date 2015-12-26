@@ -2,3 +2,24 @@
     margin: auto;
     max-width: 600px;
 }
+
+#current {
+    padding: 16px;
+    padding-left: 96px; /*64 for image + 16*2 padding*/
+    position: relative;
+}
+#current img {
+    top: 16px;
+    left: 16px;
+    position: absolute;
+}
+
+.button-complete {
+    background: rgb(28, 184, 65); /* green */
+}
+.button-later {
+    background: rgb(66, 184, 221); /* light blue */
+}
+.button-ignore {
+    background: rgb(202, 60, 60); /* maroon */
+}

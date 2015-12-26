@@ -1,0 +1,66 @@
+<html>
+<head>
+    <link rel="stylesheet" href="css/pure-min-0.6.0.css">
+    <script>
+        /*
+        var data = {
+            {
+                question = "?",
+                {
+                    "stuff",
+                    "more stuff"
+                }
+            }
+        }
+        */
+        /*
+            questions which have sub arrays of tasks (or more questions?)
+            use arrays and have a version number to update saves if needed
+            recursive go through everything, have skip buttons and a list of skipped items built up?
+             (and everything goes in one place)
+            each item -> complete (checkmark, green), later (grey, alarm), ignore (red X)
+             save data on each item?
+            questions -> yes / no / not sure ?
+             not sure will just move question to end of list to be asked again
+            ? everything has default state of not answered or something, only save answers ?
+        */
+        /*
+        var data = [
+            {
+                type: "check",
+                text: "stuff",
+                //sub: []
+            },
+            {}
+        ]
+        */
+        var Data = [
+            ["icon.png", "Do this."],
+            ["icon.png", "Question?", [
+                ["icon.png", "Do a thing."],
+                ["icon.png", "Do another thing."],
+                ["icon.png", "Another question?", [
+                    ["icon.png", "More question!"]
+                ]]
+            ]],
+            ["icon.png", "Final thing!"]
+        ]
+        //TODO Save is loaded
+        var Save = {
+            version: 1,
+            current: [0], //could be for example [0, 1] which would mean element 0's sub 1 (note that with the above structure, what this ACTUALLY would translate to is Data[0][3][1], the 3 is because we have to go to the sub-array's arrays)
+            skiped: [
+                [1,2], //using same pattern as above, except we have an array of skips
+                [3]
+            ]
+        }
+
+        //TODO now we need a function to process what to show
+
+        //TODO in the future, we need a way to update saves with what's current vs skipped (basically, take anything inserted before current and put it in skipped)
+    </script>
+</head>
+<body>
+    .
+</body>
+</html>

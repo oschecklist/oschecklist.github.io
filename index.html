@@ -1,6 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="css/pure-min-0.6.0.css">
+    <link rel="stylesheet" href="css/style.css">
     <script>
         /*
         var data = {
@@ -34,6 +35,7 @@
             {}
         ]
         */
+
         var Data = [
             ["icon.png", "Do this."],
             ["icon.png", "Question?", [
@@ -44,23 +46,68 @@
                 ]]
             ]],
             ["icon.png", "Final thing!"]
-        ]
+        ];
+
         //TODO Save is loaded
         var Save = {
             version: 1,
             current: [0], //could be for example [0, 1] which would mean element 0's sub 1 (note that with the above structure, what this ACTUALLY would translate to is Data[0][3][1], the 3 is because we have to go to the sub-array's arrays)
-            skiped: [
+            skipped: [
                 [1,2], //using same pattern as above, except we have an array of skips
                 [3]
+            ],
+            qskipped: [
+                [8,4] // same format, these are questions that are skipped, so anything under them is ignored, as well as them
             ]
-        }
+        };
 
         //TODO now we need a function to process what to show
 
         //TODO in the future, we need a way to update saves with what's current vs skipped (basically, take anything inserted before current and put it in skipped)
+        // load fn: grab data into Save, apply version updates (placing any "skipped" if needed), place skipped in table, current in current
+        // note, version updates should be an array of arrays with values (in save form) of what was added
+        //  actually, needs to be an array of objects (object per version), {added:, removed:}
+
+        if (!String.prototype.format) {
+            String.prototype.format = function() {
+                var args = arguments;
+                return this.replace(/{(\d+)}/g, function(match, number) {
+                    return typeof args[number] != 'undefined' ? args[number] : match ;
+                });
+            };
+        }
+
+        function writeTaskInnerHTML(element, task) {
+            element.innerHTML = "<td><img src='{0}'><p>{1}</p></td>".format(task[0], task[1]);
+        }
+
+        var current = Save.current
+        function display() {
+            //var element = document.getElementById()
+            var element = document.createElement("tr");
+            //current is an array that tells us what to display (format is like in Save)
+            //either display as question (or not) based on if a [3] exists in current
+            // if a skip is chosen, current is appended to Save.skipped, and it is placed in lower table
+        }
     </script>
 </head>
 <body>
-    .
+    <table class="pure-table centered">
+        <thead>
+            <tr>
+                <td>current item</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>skipped header</th>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>skipped items</td>
+            </tr>
+        </tfoot>
+    </table>
 </body>
 </html>

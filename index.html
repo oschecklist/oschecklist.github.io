@@ -38,12 +38,18 @@
 
             if (loaded != null) {
                 Save = JSON.parse(loaded);
+                console.log("Task data loaded:");
+                console.log(Save);
+            } else {
+                console.log("Task data not loaded (doesn't exist or invalid).");
             }
         }
 
         function save() {
             var saveable = JSON.stringify(Save);
             localStorage.setItem("oschecklist", saveable);
+
+            console.log("Saved task data.")
         }
 
         function getTask() {
@@ -54,6 +60,10 @@
             for (var i = 1; i < Save.current.length; i++) {
                 task = task[2][Save.current[i]];
             }
+
+            console.log("Got task:");
+            console.log(task);
+
             return task;
         }
 
@@ -71,6 +81,10 @@
                     return getNextTask();
                 }
             }
+
+            console.log("Got (next) task:");
+            console.log(task);
+
             return task;
         }
 
@@ -80,9 +94,15 @@
             } else {
                 document.getElementById("current").innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:completeTask();' title='I\'m doing this.'><span class='fa fa-check'></span></button></td><td colspan='2' class='task'><img src='{0}'><p>{1}</p></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:ignoreTask();' title='I\'m not doing this.'><span class='fa fa-times'></span></button></td>".format(task[0], task[1]);
             }
+
+            console.log("Displayed task:");
+            console.log(task);
         }
 
         function completeTask() {
+            console.log("Completing task:");
+            console.log(getTask());
+
             if (getTask()[2] !== undefined) {
                 // if question -> do question
                 Save.current.push(0);
@@ -94,6 +114,9 @@
         }
 
         function ignoreTask() {
+            console.log("Ignoring task:");
+            console.log(getTask());
+
             // we only save ignored questions
             // (so updates to the question doesn't give us new tasks we don't want)
             if (getTask()[2] !== undefined) {
@@ -107,7 +130,9 @@
         function skipTask() {
             var id = "id" + nextID++;
             Save.skipped.push([id, Save.current]);
+            console.log("Skipping task:");
             var task = getTask();
+            console.log(task);
             var skipped = document.createElement("tr");
             skipped.setAttribute("id", "id" + id);
             skipped.innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:lateTask({0});' title='Task complete.'><span class='fa fa-check'></span></button></td><td colspan='2' class='task'><img src='{1}'><p>{2}</p></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:lateTask({0});' title='I\'m not doing this.'><span class='fa fa-times'></span></button></td>".format("id" + id, task[0], task[1]);
@@ -116,6 +141,8 @@
         }
 
         function lateTask(id) {
+            console.log("Removing late task...");
+
             // take off of our list
             for (var i = 0; i < Save.skipped.length; i++) {
                 if (Save.skipped[i][0] == id) {
@@ -126,6 +153,9 @@
             // remove element with specified ID
             var element = document.getElementById(id);
             element.parentNode.removeChild(element);
+
+            console.log("Task data:");
+            console.log(Save);
         }
 
         window.onload = function() {

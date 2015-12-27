@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="css/pure-min-0.6.0.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
+
     <script>
         if (!String.prototype.format) {
             String.prototype.format = function() {
@@ -13,13 +14,13 @@
             };
         }
 
-        var Data = [
+        var Tasks = [
             ["icon.png", "Do this."],
             ["icon.png", "Question?", [
                 ["icon.png", "Do a thing."],
                 ["icon.png", "Do another thing."],
                 ["icon.png", "Another question?", [
-                    ["icon.png", "More question!"]
+                    ["icon.png", "More question! Not really."]
                 ]]
             ]],
             ["icon.png", "Final thing!"]
@@ -35,16 +36,62 @@
         //TODO load game first!
 
         // get to where we're at
-        var currentArray = Save.current;
-        var currentReference = Data[currentArray[0]]; //special, there is no preceding 2
-        for (var i = 1; i < currentArray.length; i++) {
-            currentReference = currentReference[2][currentArray[i]];
+        var currentReference;
+
+        function getCurrentTask() {
+
+            currentReference = Tasks[Save.current[0]]; //special, there is no preceding 2
+            for (var i = 1; i < Save.current.length; i++) {
+                currentReference = currentReference[2][Save.current[i]];
+            }
+
+            if (currentReference === undefined) {
+                if (Save.current.length == 1) {
+                    //currentReference = "wifhwoiegwe"; //TEMP
+                    return; // we're done! TODO figure out what to do now...
+                } else {
+                    Save.current.pop();
+                    getCurrentTask();
+                    while (currentReference[2] === undefined) {
+                        Save.current.pop();
+                        getCurrentTask();
+                    }
+                }
+            }
         }
+        getCurrentTask();
 
         // place current on screen
-        function display() {
+        function displayTask() {
             var element = document.getElementById("current");
             element.innerHTML = "<img src='{0}' style='float:left;padding-right:16px;'><p>{1}</p>".format(currentReference[0], currentReference[1]);
+        }
+
+        function nextTask() {
+            Save.current[Save.current.length - 1]++;
+            getCurrentTask();
+            displayTask();
+        }
+
+        //complete == yes to question (fix this!)
+        function completeTask() {
+            if (currentReference[2] !== undefined) {
+                Save.current.push(0);
+                getCurrentTask();
+                displayTask();
+            } else {
+                nextTask();
+            }
+        }
+
+        function delayTask() {
+            Save.skipped.push(Save.current);
+            //TODO add it to skipped tasks visible!
+            nextTask();
+        }
+
+        function skipTask() {
+            nextTask();
         }
 
         /*
@@ -90,31 +137,30 @@
         */
 
         window.onload = function() {
-            setTimeout(display, 1);
+            setTimeout(displayTask, 1);
 
+            /*
             if (window.addEventListener) {
                 window.addEventListener("storage", handleStorage, false);
             } else {
                 window.attachEvent("onstorage", handleStorage);
             }
+            */
         };
     </script>
 </head>
 <body>
-    <table class="pure-table pure-table-bordered centered">
+    <table class="pure-table pure-table-horizontal centered">
         <tbody>
             <tr>
                 <th colspan="4">Current Task:</th>
             </tr>
             <tr>
-                <td><button class="pure-button button-complete" onclick="javascript:nextTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
+                <!--TODO build this because some things are yes/no instead of complete/incomplete-->
+                <td><button class="pure-button button-complete" onclick="javascript:completeTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
                 <td id="current"></td>
-                <td><button class="pure-button button-later" onclick="javascript:skipTask();" title="Do this later."><span class="fa fa-clock-o"></span></button></td>
-                <td><button class="pure-button button-ignore" onclick="javascript:nextTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>
-                <!--
-                <td><button class='pure-button button-delete' onclick='javascript:removeSkill(\"{0}\", \"{1}\");' title='Delete this skill.'><span class='fa fa-ban'></span></td><td><div>{0}<div class='level'>Lv {2}</div></div><br /><progress value='{3}' max='{4}'></progress></td><td><button class='pure-button button-plus' onclick='javascript:skillUp(\"{0}\", \"{1}\");' title='+1 xp'><span class='fa fa-plus-circle'></span></button></td>
-                -->
-                <!--complete (checkmark, green), later (grey, alarm), ignore (red X)-->
+                <td><button class="pure-button button-later" onclick="javascript:delayTask();" title="Do this later."><span class="fa fa-clock-o"></span></button></td>
+                <td><button class="pure-button button-ignore" onclick="javascript:skipTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>
             </tr>
         </tbody>
         <tfoot>
@@ -122,9 +168,10 @@
                 <th colspan="4">Skipped Tasks:</th>
             </tr>
             <tr id="skipped">
-                <td><button class="pure-button button-complete" onclick="javascript:nextTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
+                <!--TODO these will be generated! NEED FUNCTION NAMES!-->
+                <td><button class="pure-button button-complete" onclick="javascript:nopeTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
                 <td colspan="2">example</td>
-                <td><button class="pure-button button-ignore" onclick="javascript:nextTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>
+                <td><button class="pure-button button-ignore" onclick="javascript:notTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>
             </tr>
         </tfoot>
     </table>

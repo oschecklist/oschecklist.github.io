@@ -23,3 +23,7 @@
 .button-ignore {
     background: rgb(202, 60, 60); /* maroon */
 }
+
+th, td {
+    border-width: 1px !important; /* fixing pure css not setting borders properly */
+}

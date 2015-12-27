@@ -1,14 +1,14 @@
 .centered {
     margin: auto;
-    max-width: 600px;
+    width: 600px;
 }
 
-#current {
+#current.task {
     padding: 16px;
     padding-left: 96px; /*64 for image + 16*2 padding*/
     position: relative;
 }
-#current img {
+#current.task img {
     top: 16px;
     left: 16px;
     position: absolute;

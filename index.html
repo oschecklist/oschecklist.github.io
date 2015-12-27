@@ -33,111 +33,80 @@
             qskipped: []
         };
 
-        //TODO load game first!
+        function load() {
+            var loaded = localStorage.getItem("oschecklist");
 
-        // get to where we're at
-        var currentReference;
-
-        function getCurrentTask() {
-
-            currentReference = Tasks[Save.current[0]]; //special, there is no preceding 2
-            for (var i = 1; i < Save.current.length; i++) {
-                currentReference = currentReference[2][Save.current[i]];
+            if (loaded != null) {
+                Save = JSON.parse(loaded);
             }
+        }
 
-            if (currentReference === undefined) {
-                if (Save.current.length == 1) {
-                    //currentReference = "wifhwoiegwe"; //TEMP
-                    return; // we're done! TODO figure out what to do now...
+        function save() {
+            var saveable = JSON.stringify(Save);
+            localStorage.setItem("oschecklist", saveable);
+        }
+
+        function getTask() {
+            if (Save.current.length < 1) {
+                return ["icon.png", "All tasks complete!"];
+            }
+            var task = Tasks[Save.current[0]]; //no preceding 2
+            for (var i = 1; i < Save.current.length; i++) {
+                task = task[2][Save.current[i]];
+            }
+            return task;
+        }
+
+        function getNextTask() {
+            if (Save.current.length < 1) {
+                return ["icon.png", "All tasks complete!"];
+            }
+            Save.current[Save.current.length - 1]++;
+            var task = Tasks[Save.current[0]]; //no preceding 2
+            for (var i = 1; i < Save.current.length; i++) {
+                if (task[2][Save.current[i]] !== undefined) {
+                    task = task[2][Save.current[i]];
+                    console.log("THING" + task);
+                    console.log("if previous log is undefined / null, check getNextTask()");
                 } else {
                     Save.current.pop();
-                    getCurrentTask();
-                    while (currentReference[2] === undefined) {
-                        Save.current.pop();
-                        getCurrentTask();
-                    }
+                    return getNextTask();
                 }
             }
-        }
-        getCurrentTask();
-
-        // place current on screen
-        function displayTask() {
-            var element = document.getElementById("current");
-            element.innerHTML = "<img src='{0}' style='float:left;padding-right:16px;'><p>{1}</p>".format(currentReference[0], currentReference[1]);
+            return task;
         }
 
-        function nextTask() {
-            Save.current[Save.current.length - 1]++;
-            getCurrentTask();
-            displayTask();
-        }
-
-        //complete == yes to question (fix this!)
-        function completeTask() {
-            if (currentReference[2] !== undefined) {
-                Save.current.push(0);
-                getCurrentTask();
-                displayTask();
+        function display(task) {
+            console.log(task);
+            if (task.length == 2) {
+                document.getElementById("current").innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:completeTask();' title='Task complete.'><span class='fa fa-check-circle-o'></span></button></td><td class='task'><img src='{0}'><p>{1}</p></td><td style='width:10%;'><button class='pure-button button-later' onclick='javascript:skipTask();' title='Do this later.'><span class='fa fa-clock-o'></span></button></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:ignoreTask();' title='I\'m not doing this.'><span class='fa fa-ban'></span></button></td>".format(task[0], task[1]);
             } else {
-                nextTask();
+                document.getElementById("current").innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:completeTask();' title='I\'m doing this.'><span class='fa fa-check'></span></button></td><td colspan='2' class='task'><img src='{0}'><p>{1}</p></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:ignoreTask();' title='I\'m not doing this.'><span class='fa fa-times'></span></button></td>".format(task[0], task[1]);
             }
         }
 
-        function delayTask() {
-            Save.skipped.push(Save.current);
-            //TODO add it to skipped tasks visible!
-            nextTask();
+        function completeTask() {
+            if (getTask()[2] !== undefined) {
+                // if question -> do question
+                Save.current.push(0);
+                display(getTask());
+            } else {
+                // else -> next
+                display(getNextTask());
+            }
         }
 
         function skipTask() {
-            nextTask();
+            //TODO add whatever it is to skipped
+            display(getNextTask());
         }
 
-        /*
-            each item -> complete (checkmark, green), later (grey, alarm), ignore (red X)
-             save data on each item?
-            questions -> yes / no / not sure ?
-             not sure will just move question to end of list to be asked again
-        */
-
-        //TODO Save is loaded
-        /*var Save = {
-            version: 1,
-            current: [0], //could be for example [0, 1] which would mean element 0's sub 1 (note that with the above structure, what this ACTUALLY would translate to is Data[0][3][1], the 3 is because we have to go to the sub-array's arrays)
-            skipped: [
-                [1,2], //using same pattern as above, except we have an array of skips
-                [3]
-            ],
-            qskipped: [
-                [8,4] // same format, these are questions that are skipped, so anything under them is ignored, as well as them
-            ]
-        };*/
-
-        //TODO now we need a function to process what to show
-
-        //TODO in the future, we need a way to update saves with what's current vs skipped (basically, take anything inserted before current and put it in skipped)
-        // load fn: grab data into Save, apply version updates (placing any "skipped" if needed), place skipped in table, current in current
-        // note, version updates should be an array of arrays with values (in save form) of what was added
-        //  actually, needs to be an array of objects (object per version), {added:, removed:}
-
-        /*
-        function writeTaskInnerHTML(element, task) {
-            element.innerHTML = "<td><img src='{0}'><p>{1}</p></td>".format(task[0], task[1]);
+        function ignoreTask() {
+            display(getNextTask());
         }
-
-        var current = Save.current
-        function display() {
-            //var element = document.getElementById()
-            var element = document.createElement("tr");
-            //current is an array that tells us what to display (format is like in Save)
-            //either display as question (or not) based on if a [3] exists in current
-            // if a skip is chosen, current is appended to Save.skipped, and it is placed in lower table
-        }
-        */
 
         window.onload = function() {
-            setTimeout(displayTask, 1);
+            setTimeout(function() { display(getTask()); }, 1);
 
             /*
             if (window.addEventListener) {
@@ -155,23 +124,17 @@
             <tr>
                 <th colspan="4">Current Task:</th>
             </tr>
-            <tr>
-                <!--TODO build this because some things are yes/no instead of complete/incomplete-->
-                <td><button class="pure-button button-complete" onclick="javascript:completeTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
-                <td id="current"></td>
-                <td><button class="pure-button button-later" onclick="javascript:delayTask();" title="Do this later."><span class="fa fa-clock-o"></span></button></td>
-                <td><button class="pure-button button-ignore" onclick="javascript:skipTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>
-            </tr>
+            <tr id="current"></tr>
         </tbody>
         <tfoot>
             <tr>
                 <th colspan="4">Skipped Tasks:</th>
             </tr>
             <tr id="skipped">
-                <!--TODO these will be generated! NEED FUNCTION NAMES!-->
+                <!--TODO these will be generated! NEED FUNCTION NAMES!-/->
                 <td><button class="pure-button button-complete" onclick="javascript:nopeTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
                 <td colspan="2">example</td>
-                <td><button class="pure-button button-ignore" onclick="javascript:notTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>
+                <td><button class="pure-button button-ignore" onclick="javascript:notTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>-->
             </tr>
         </tfoot>
     </table>

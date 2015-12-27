@@ -47,10 +47,15 @@
         }
 
         function getTask() {
+            /*
             if (Save.current.length < 1) {
                 return ["icon.png", "All tasks complete!"];
             }
+            */
             var task = Tasks[Save.current[0]]; //no preceding 2
+            if (task === undefined) {
+                return ["icon.png", "All tasks complete!"];
+            }
             for (var i = 1; i < Save.current.length; i++) {
                 task = task[2][Save.current[i]];
             }
@@ -58,11 +63,17 @@
         }
 
         function getNextTask() {
+            console.log(Save);
+            /*
             if (Save.current.length < 1) {
                 return ["icon.png", "All tasks complete!"];
             }
+            */
             Save.current[Save.current.length - 1]++;
             var task = Tasks[Save.current[0]]; //no preceding 2
+            if (task === undefined) {
+                return ["icon.png", "All tasks complete!"];
+            }
             for (var i = 1; i < Save.current.length; i++) {
                 if (task[2][Save.current[i]] !== undefined) {
                     task = task[2][Save.current[i]];
@@ -92,6 +103,7 @@
                 display(getTask());
             } else {
                 // else -> next
+                console.log("We are in else! (completeTask())");
                 display(getNextTask());
             }
         }

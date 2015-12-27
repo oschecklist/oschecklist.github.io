@@ -14,6 +14,7 @@
             };
         }
 
+        //*
         var Tasks = [
             ["icon.png", "Do this."],
             ["icon.png", "Question?", [
@@ -25,6 +26,14 @@
             ]],
             ["icon.png", "Final thing!"]
         ];
+        //*/
+
+        /*
+        var version = 0; // later will be used in conjunction with load() to update invalid save data
+        var Tasks = [
+            //
+        ];
+        //*/
 
         var Save = {
             version: 0,
@@ -89,7 +98,7 @@
         }
 
         function display(task) {
-            if (task.length == 2) {
+            if ((task.length == 2) && ! (task[1] == "All tasks complete!")) {
                 document.getElementById("current").innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:completeTask();' title='Task complete.'><span class='fa fa-check'></span></button></td><td class='task'><img src='{0}'><p>{1}</p></td><td style='width:10%;'><button class='pure-button button-later' onclick='javascript:skipTask();' title='Do this later.'><span class='fa fa-clock-o'></span></button></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:ignoreTask();' title='I\'m not doing this.'><span class='fa fa-times'></span></button></td>".format(task[0], task[1]);
             } else {
                 document.getElementById("current").innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:completeTask();' title='I\'m doing this.'><span class='fa fa-check'></span></button></td><td colspan='2' class='task'><img src='{0}'><p>{1}</p></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:ignoreTask();' title='I\'m not doing this.'><span class='fa fa-times'></span></button></td>".format(task[0], task[1]);

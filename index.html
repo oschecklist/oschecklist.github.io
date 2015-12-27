@@ -30,7 +30,7 @@
             version: 0,
             current: [0],
             skipped: [],
-            qskipped: []
+            ignored: []
         };
 
         function load() {
@@ -47,11 +47,6 @@
         }
 
         function getTask() {
-            /*
-            if (Save.current.length < 1) {
-                return ["icon.png", "All tasks complete!"];
-            }
-            */
             var task = Tasks[Save.current[0]]; //no preceding 2
             if (task === undefined) {
                 return ["icon.png", "All tasks complete!"];
@@ -63,12 +58,6 @@
         }
 
         function getNextTask() {
-            console.log(Save);
-            /*
-            if (Save.current.length < 1) {
-                return ["icon.png", "All tasks complete!"];
-            }
-            */
             Save.current[Save.current.length - 1]++;
             var task = Tasks[Save.current[0]]; //no preceding 2
             if (task === undefined) {
@@ -77,8 +66,6 @@
             for (var i = 1; i < Save.current.length; i++) {
                 if (task[2][Save.current[i]] !== undefined) {
                     task = task[2][Save.current[i]];
-                    console.log("THING" + task);
-                    console.log("if previous log is undefined / null, check getNextTask()");
                 } else {
                     Save.current.pop();
                     return getNextTask();
@@ -88,9 +75,8 @@
         }
 
         function display(task) {
-            console.log(task);
             if (task.length == 2) {
-                document.getElementById("current").innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:completeTask();' title='Task complete.'><span class='fa fa-check-circle-o'></span></button></td><td class='task'><img src='{0}'><p>{1}</p></td><td style='width:10%;'><button class='pure-button button-later' onclick='javascript:skipTask();' title='Do this later.'><span class='fa fa-clock-o'></span></button></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:ignoreTask();' title='I\'m not doing this.'><span class='fa fa-ban'></span></button></td>".format(task[0], task[1]);
+                document.getElementById("current").innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:completeTask();' title='Task complete.'><span class='fa fa-check'></span></button></td><td class='task'><img src='{0}'><p>{1}</p></td><td style='width:10%;'><button class='pure-button button-later' onclick='javascript:skipTask();' title='Do this later.'><span class='fa fa-clock-o'></span></button></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:ignoreTask();' title='I\'m not doing this.'><span class='fa fa-times'></span></button></td>".format(task[0], task[1]);
             } else {
                 document.getElementById("current").innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:completeTask();' title='I\'m doing this.'><span class='fa fa-check'></span></button></td><td colspan='2' class='task'><img src='{0}'><p>{1}</p></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:ignoreTask();' title='I\'m not doing this.'><span class='fa fa-times'></span></button></td>".format(task[0], task[1]);
             }
@@ -103,18 +89,43 @@
                 display(getTask());
             } else {
                 // else -> next
-                console.log("We are in else! (completeTask())");
                 display(getNextTask());
             }
         }
 
-        function skipTask() {
-            //TODO add whatever it is to skipped
+        function ignoreTask() {
+            // we only save ignored questions
+            // (so updates to the question doesn't give us new tasks we don't want)
+            if (getTask()[2] !== undefined) {
+                Save.ignored.push(Save.current);
+            }
             display(getNextTask());
         }
 
-        function ignoreTask() {
+        var nextID = 0; // used in skipTask() and lateTask()
+
+        function skipTask() {
+            var id = "id" + nextID++;
+            Save.skipped.push([id, Save.current]);
+            var task = getTask();
+            var skipped = document.createElement("tr");
+            skipped.setAttribute("id", "id" + id);
+            skipped.innerHTML = "<td style='width:10%;'><button class='pure-button button-complete' onclick='javascript:lateTask({0});' title='Task complete.'><span class='fa fa-check'></span></button></td><td colspan='2' class='task'><img src='{1}'><p>{2}</p></td><td style='width:10%;'><button class='pure-button button-ignore' onclick='javascript:lateTask({0});' title='I\'m not doing this.'><span class='fa fa-times'></span></button></td>".format("id" + id, task[0], task[1]);
+            document.getElementById("skipped").appendChild(skipped);
             display(getNextTask());
+        }
+
+        function lateTask(id) {
+            // take off of our list
+            for (var i = 0; i < Save.skipped.length; i++) {
+                if (Save.skipped[i][0] == id) {
+                    Save.skipped.splice(i, 1);
+                    break;
+                }
+            }
+            // remove element with specified ID
+            var element = document.getElementById(id);
+            element.parentNode.removeChild(element);
         }
 
         window.onload = function() {
@@ -136,19 +147,15 @@
             <tr>
                 <th colspan="4">Current Task:</th>
             </tr>
+
             <tr id="current"></tr>
-        </tbody>
-        <tfoot>
+
             <tr>
                 <th colspan="4">Skipped Tasks:</th>
             </tr>
-            <tr id="skipped">
-                <!--TODO these will be generated! NEED FUNCTION NAMES!-/->
-                <td><button class="pure-button button-complete" onclick="javascript:nopeTask();" title="Task complete."><span class="fa fa-check-circle-o"></span></button></td>
-                <td colspan="2">example</td>
-                <td><button class="pure-button button-ignore" onclick="javascript:notTask();" title="I'm not doing this."><span class="fa fa-ban"></span></button></td>-->
-            </tr>
-        </tfoot>
+        </tbody>
+
+        <tfoot id="skipped"></tfoot>
     </table>
 </body>
 </html>

@@ -1,5 +1,7 @@
 <html>
 <head>
+    <title>OS Checklist - A dynamic checklist to help set up computers</title>
+
     <link rel="stylesheet" href="css/pure-min-0.6.0.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
@@ -14,26 +16,54 @@
             };
         }
 
-        //*
-        var Tasks = [
-            ["icon.png", "Do this."],
-            ["icon.png", "Question?", [
-                ["icon.png", "Do a thing."],
-                ["icon.png", "Do another thing."],
-                ["icon.png", "Another question?", [
-                    ["icon.png", "More question! Not really."]
-                ]]
-            ]],
-            ["icon.png", "Final thing!"]
-        ];
-        //*/
-
-        /*
         var version = 0; // later will be used in conjunction with load() to update invalid save data
         var Tasks = [
-            //
+            ["", "Install the browser you will be using for this list. Or open this on another computer (and wipe the saved data, if present).<br />(<a href='https://www.mozilla.org/en-US/firefox/new/?scene=2#download-fx'>Firefox</a>, <a href='https://www.google.com/chrome/'>Chrome</a>, <a href='http://www.opera.com/'>Opera</a>, <a href='https://www.waterfoxproject.org/'>Waterfox</a>, <a href='https://www.torproject.org/projects/torbrowser.html.en'>Tor Browser</a> (warning: you'll end up on a watchlist and may not be able to download all the programs you want to))"],
+            ["", "Set up username and password."],
+            ["", "Windows 7?", [
+                ["", "Get <a href='https://www.microsoft.com/en-us/windows/windows-10-upgrade'>Windows 10</a>?<br />While generally a smoother and more up-to-date OS, 10 suffers from a glitchy settings system, broken updating, and a system that likes pop-ups, distractions, and other annoying stuff&trade;."]
+            ]],
+            ["", "Windows 10", [
+                ["", "Skip connecting to WiFi (or do it)."],
+                //NOTE FIX THIS LINK!
+                ["", "<b>CUSTOMIZE</b> settings. Do not accept recommended settings (very privacy invasive).<br />Alternately, use <a href=''>this anti-spyware tool</a> later."],
+                ["", "Remove tiles from Start Menu (or at least the ones you don't want)."],
+                ["", "Uninstall tiles (apps) from Star Menu->All Apps that you don't want."],
+                ["", "Link Microsoft account?"]
+            ]],
+            //NOTE this section kinda unnecessary
+            ["", "Is it an HP?", [
+                ["", "Uninstall HP crapware."],
+                ["", "Uninstall anything you don't want (except Microsoft, Intel, RealTek items)."],
+                ["", "Uninstall Norton/McAfee malware..unless you want that kind of thing.<br />(If removing McAfee, don't forget <a href='http://us.mcafee.com/apps/supporttools/mcpr/mcpr.asp'>this tool</a> to completely remove everything (<a href='https://service.mcafee.com/webcenter/portal/cp/home/articleview?articleId=TS101331'>source</a>).)"]
+            ]],
+            ["", "Uninstall bloatware."],
+            ["", "Install anti-malware?", [
+                ["", "<a href='http://free.antivirus.com/us/#cleanup-and-prevention'>Trend Micro's software</a> (several useful tools located here).<br />(At time of writing, I recommend Anti-Ransomware, &amp; HouseCall, &amp; <a href='http://sourceforge.net/projects/hjt/'>HiJack This</a>.)"],
+                ["", "Not on Windows 10?", [
+                    //TODO linkify this list of antivirus and add more!
+                    ["", "Install antivirus! (Specially, check out Microsoft's own <a href='http://windows.microsoft.com/en-us/windows/security-essentials-download'>Security Essentials</a>, or your own favorite brand: AVG, Malwarebytes, Avast)"]
+                ]]
+            ]],
+            ["", "Install programs?", [
+                ["", "Dropbox?", [
+                    ["", "Okay, now go remove it from autoplay."],
+                    ["", "Plug in a USB / Take a screenshot with print screen. (So you can cancel its popups and get rid of them.)"]
+                    //NOTE may need to also use CD, SD, etc to get rid of all that crap
+                ]],
+                ["", "Password manager/database?", [
+                    ["", "<a href='http://keepass.info/download.html'>KeePass</a>?"]
+                    //TODO add LastPass here
+                ]],
+                ["", "<a href='https://www.piriform.com/ccleaner/download'>CCleaner</a><br />(Crap cleaner: Cleans registry, cookies, various deitrus that builds up when using Windows.)"],
+                ["", "Gaming software?", [
+                    ["", "Install <a href='http://store.steampowered.com/about/'>Steam</a>!"],
+                    ["", "Install <a href='https://www.origin.com/en-us/download'>Origin</a>?"]
+                ]]
+            ]],
+            ["", "Turn autoplay off (unless you want that).<br />(On Windows 10: Settings->Devices->AutoPlay)"]
         ];
-        //*/
+        //TODO add a thing that goes if "" -> "default.png"
 
         var Save = {
             version: 0,

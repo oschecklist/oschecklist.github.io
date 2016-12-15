@@ -1,0 +1,6 @@
+ID and tags ?
+- description is HTML ? makes it easier to display, just do an innerHTML set
+  (makes it bulkier, but not to an appreciable degree)
+- tags + id + (something to order and group things?) determine what to show in what order
+- need to save what step on, what groups wanted, what has been saved for later
+- Yes/No buttons or checkboxes and green tick marks for "done" instead of the generic green tick / generic red X I currently have

@@ -1,0 +1,14 @@
+[
+  {
+    "tags": ["win", "music", "audio"],
+    "html": "Some descripton, <em>including</em> embedded HTML.",
+  },
+  {
+    "tags": ["win10"],
+    "html": "This one will only be for Windows 10, whereas the other will be for Windows of any sort.",
+  },
+  {
+    "tags": ["info"],
+    "html": "The order in which these appear determines the order in which it wants to go through them."
+  }
+]

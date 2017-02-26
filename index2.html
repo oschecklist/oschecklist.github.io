@@ -71,7 +71,7 @@
         ]
       },
       {
-        tags: ["Installers", "Files"],
+        tags: ["Installers", "Cloud Storage"],
         html: "Install <a href='https://www.dropbox.com/downloading'>Dropbox</a>?"
         sub: [
           {
@@ -89,7 +89,7 @@
         ]
       },
       {
-        tags: ["Virtualization", "Installers"],
+        tags: ["Installers", "Virtualization"],
         html: "Install <a href='https://www.virtualbox.org/wiki/Downloads'>VirtualBox</a>?",
         sub: [
           {
@@ -99,7 +99,7 @@
         ]
       },
       {
-        tags: ["Windows", "Gaming", "Installers"],
+        tags: ["Windows", "Installers", "Gaming"],
         html: "Install <a href='https://www.gog.com/galaxy'>GOG Galaxy</a>?",
         sub: [
           {
@@ -112,7 +112,7 @@
         ]
       },
       {
-        tags: ["Gaming", "Installers"],
+        tags: ["Installers", "Gaming"],
         html: "Install <a href='http://store.steampowered.com/about/'>Steam</a>?",
         sub: [
           {
@@ -122,7 +122,7 @@
         ]
       },
       {
-        tags: ["Gaming", "Installers"],
+        tags: ["Installers", "Gaming"],
         html: "Install <a href='https://itch.io/app'>itch client</a>?",
         sub: [
           {
@@ -132,7 +132,7 @@
         ]
       },
       {
-        tags: ["Windows", "Gaming", "Installers"],
+        tags: ["Windows", "Installers", "Gaming"],
         html: "Install <a href='https://uplay.ubi.com/'>Uplay</a>?",
         sub: [
           {
@@ -168,7 +168,16 @@
       {
         tags: ["Installers", "Utility"],
         html: "Install <a href='https://www.rescuetime.com/setup/download'>RescueTime</a>?"
-      }
+      },
+      {
+        tags: ["Windows 10"],
+        html: "Disable full-screen update notifications.<br/><br/>Open an elavated command prompt and execute:<br/>\
+        <code>cd /d \"%Windr%\System32\"\
+        takeown /F MusNotification.exe\
+        icacls MusNotification.exe /deny Everyone:(X)\
+        takeown /F MusNotificationUx.exe\
+        icacls MusNotificationUx.exe /deny Everyone:(X)</code><br/><br/><a href='https://www.reddit.com/r/Windows10/comments/3j8e2s/how_do_i_disable_this_fullscreen_update/cz9z0t2'>source</a>"
+      },
     ];
     var Games = [
       {
@@ -177,7 +186,7 @@
       /*{
         html: "<a href='https://www.factorio.com/download'>Factorio</a>"
       },*/
-    ]
+    ];
   </script>
 </head>
 <body>

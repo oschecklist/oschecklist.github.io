@@ -1,0 +1,176 @@
+<html>
+<head>
+  <title>OS Checklist - A dynamic checklist to help set up computers</title>
+
+  <link rel="stylesheet" href="css/pure-min-0.6.0.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script>
+    var Tasks = [
+      /*{
+        tags: ["Browser", "Installers"],
+        html: "Install the browser you'll be using for this list.<br />(<a href='https://www.mozilla.org/firefox/new/'>Firefox</a>, <a href='https://www.google.com/chrome/'>Chrome</a>, <a href='http://www.opera.com/'>Opera</a>, <a href='https://www.waterfoxproject.org/'>Waterfox</a>, <a href='https://www.torproject.org/projects/torbrowser.html'>Tor Browser</a>)"
+      },*/
+      {
+        tags: ["Linux", "Pre-installation"],
+        html: "Set up a swap partition. (Guidelines vary between using half of your RAM or double your RAM for the amount of swap space to create. I recommend no less than 2 GB and no more than 12 GB.)"
+      },
+      {
+        tags: ["Linux", "Pre-installation", "Main disk SSD"],
+        html: "Set up <code>/home</code> mountpoint on a different disk for more space."
+      },
+      {
+        tags: ["Linux", "Debian-based"],
+        html: "Install updates.<br /><code>sudo apt-get update &amp;&amp; sudo apt-get upgrade -y</code><br />(Also <code>autoremove</code> and <code>autoclean</code>?)"
+      },
+      {
+        tags: ["Elementary OS"],
+        html: "Turn off Guest Session. (System Settings -> User Accounts)"
+      },
+      {
+        tags: ["Browser", "Installers"],
+        html: "Install <a href='https://www.google.com/chrome/'>Google Chrome</a>?",
+        sub: [
+          {
+            tags: ["Windows 10"],
+            html: "Set Chrome as default browser? (Settings -> System -> Default apps -> Web browser)"
+          },
+          {
+            html: "Configure settings, or sign-in and sync settings."
+          }
+        ]
+      },
+      {
+        tags: ["Browser", "Installers"],
+        html: "Install <a href='https://www.mozilla.org/firefox/new'>Mozilla Firefox</a>?",
+        sub: [
+          {
+            tags: ["Windows 10"],
+            html: "Set Firefox as default browser. (Settings -> System -> Default apps -> Web browser)"
+          },
+          {
+            html: "Configure settings!"
+          },
+          {
+            html: "Set up Firefox Sync?"
+          }
+        ]
+      },
+      {
+        tags: ["Installers"],
+        html: "Install <a href='http://keepass.info/download.html'>KeePass</a>? (Get Professional Edition! It's just better. Both are free.)",
+        sub: [
+          {
+            html: "Configure settings. (Especailly Advanced -> Automatically save when closing/locking the database)"
+          }
+        ]
+      },
+      {
+        tags: ["Installers", "Files"],
+        html: "Install <a href='https://www.dropbox.com/downloading'>Dropbox</a>?"
+        sub: [
+          {
+            tags: ["Windows", "Main disk SSD"],
+            html: "Move Dropbox folder and/or set up selective sync to reduce SSD usage."
+          },
+          {
+            tags: ["VM"],
+            html: "Set up selective sync to reduce disk usage."
+          },
+          {
+            // tag Windows ?
+            html: "Stop Dropbox from trying to save PrtScr keypresses by triggering one and clicking \"No Thanks\"."
+          }
+        ]
+      },
+      {
+        tags: ["Virtualization", "Installers"],
+        html: "Install <a href='https://www.virtualbox.org/wiki/Downloads'>VirtualBox</a>?",
+        sub: [
+          {
+            tags: ["Windows", "Main disk SSD"],
+            html: "Move \"VirtualBox VMs\" onto another disk.<br />Open an administrator command prompt and go to Your user profile, then <code>mklink /D \"VirtualBox VMs\" \"[destination]\" to create a directory link</code>."
+          }
+        ]
+      },
+      {
+        tags: ["Windows", "Gaming", "Installers"],
+        html: "Install <a href='https://www.gog.com/galaxy'>GOG Galaxy</a>?",
+        sub: [
+          {
+            html: "Settings: Change 'Startup page' to Library (default is Store..)"
+          },
+          {
+            tags: ["Main disk SSD"],
+            html: "Settings: Change 'Install games to:' to another disk / location."
+          }
+        ]
+      },
+      {
+        tags: ["Gaming", "Installers"],
+        html: "Install <a href='http://store.steampowered.com/about/'>Steam</a>?",
+        sub: [
+          {
+            tags: ["Windows", "Main disk SSD"],
+            html: "Make a 'SteamLibrary' on another disk (or restore an existing SteamLibrary folder)."
+          }
+        ]
+      },
+      {
+        tags: ["Gaming", "Installers"],
+        html: "Install <a href='https://itch.io/app'>itch client</a>?",
+        sub: [
+          {
+            tags: ["Windows", "Main disk SSD"],
+            html: "Preferences (bottom left) -> Make a new install location on a different disk, and make it the default location."
+          }
+        ]
+      },
+      {
+        tags: ["Windows", "Gaming", "Installers"],
+        html: "Install <a href='https://uplay.ubi.com/'>Uplay</a>?",
+        sub: [
+          {
+            tags: ["Main disk SSD"],
+            html: "Settings (top left menu) -> Downloads -> Move installer cache and game installation locations to another disk."
+          }
+        ]
+      },
+      {
+        tags: ["Windows 10"],
+        html: "Settings -> Personalization -> Start -> Occasionally show suggestions in Start (turn it off! D:)"
+      },
+      {
+        tags: ["Installers"],
+        html: "Install <a href='https://desktop.telegram.org/'>Telegram</a>?"
+      },
+    ];
+    var Games = [
+      {
+        html: "<a href='http://www.flightgear.org/download/'>FlightGear</a> (flight simulator)"
+      },
+      /*{
+        html: "<a href='https://www.factorio.com/download'>Factorio</a>"
+      },*/
+    ]
+  </script>
+</head>
+<body>
+  <table class="pure-table pure-table-horizontal centered">
+    <tbody>
+      <tr>
+        <th colspan="4">Current Task:</th>
+      </tr>
+
+      <tr id="current"></tr>
+
+      <tr>
+        <th colspan="4">Skipped Tasks:</th>
+      </tr>
+    </tbody>
+
+    <tfoot id="skipped"></tfoot>
+  </table>
+</body>
+</html>
